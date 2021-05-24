@@ -1,6 +1,6 @@
 import {
-   testandoController
-} from "../../controllers/controllerTeste";
+   sampleController
+} from "../../controllers/controllerSample";
 
 const getSpy = jest.fn();
 const postSpy = jest.fn();
@@ -21,10 +21,10 @@ jest.doMock("express", () => {
 });
 
 describe("Testa as rotas que...", () => {
-   require("../../routes/rotaTeste");
+   require("../../routes/rotaSample");
 
-   it("teste rota '/teste'", () => {
-      expect(getSpy).toHaveBeenCalledWith("/teste", testandoController);
+   it("teste rota '/sample'", () => {
+      expect(getSpy).toHaveBeenCalledWith("/sample", sampleController);
    });
 
 });

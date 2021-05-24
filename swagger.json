@@ -1,0 +1,68 @@
+{
+   "swagger": "2.0",
+   "info": {
+      "description": "This is a simple example NodeJS API project to demonstrate Swagger Documentation",
+      "version": "1.0.0",
+      "title": "Template Backend API",
+      "contact": {
+         "email": "mateus@korok.app"
+      },
+      "license": {
+         "name": "Apache 2.0",
+         "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+      }
+   },
+   "schemes": ["http"],
+   "host": "localhost:2030",
+   "basePath": "/",
+   "paths": {
+      "/sample": {
+         "get": {
+            "summary": "Get sample",
+            "description": "Get sample",
+            "produces": ["application/json"],
+            "parameters": [],
+            "responses": {
+               "200": {
+                  "description": "Sucesso.",
+                  "schema": {
+                     "type": "array",
+                     "items": {
+                        "$ref": "#/definitions/SuccessResponse"
+                     }
+                  }
+               },
+               "500": {
+                  "description": "Erro interno do servidor.",
+                  "schema": {
+                     "type": "array",
+                     "items": {
+                        "$ref": "#/definitions/ErrorResponse"
+                     }
+                  }
+               }
+            }
+         }
+      }
+   },
+   "definitions": {
+      "SuccessResponse": {
+         "properties": {
+            "mensagem": {
+               "type": "string"
+            }
+         }
+      },
+      "ErrorResponse": {
+         "type": "object",
+         "properties": {
+            "mensagem": {
+               "type": "string"
+            },
+            "err": {
+               "type": "string"
+            }
+         }
+      }
+   }
+}
