@@ -1,28 +1,32 @@
+import { ApolloServer } from "apollo-server-express";
+import { ApolloServerPluginDrainHttpServer } from "apollo-server-core";
+import { typeDefs } from "./controllers/typeDefs";
+import { resolvers } from "./controllers/resolvers";
 import express from "express";
-const PORT = process.env.PORT || 2030;
-const app = express();
-import logger from "morgan";
-import cookieParser from "cookie-parser";
-import conexaoBancoDeDados from "./conexaoComBanco";
-import * as swaggerDocument from "./swagger.json";
-import swaggerUi = require("swagger-ui-express");
+import http from "http";
+import { DocumentNode } from "graphql";
+const logger = require("morgan");
 
-import rotaSample from "./routes/rotaSample";
+async function startApolloServer(typeDefs: DocumentNode, resolvers: any) {
+  const app = express();
+  app.use((req, res, next) => {
+    console.log(req.statusCode);
+    next();
+  });
 
-// Middlewares
-app.use(logger("dev"));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(conexaoBancoDeDados);
-app.use("/template/swagger", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+  const httpServer = http.createServer(app);
+  const server = new ApolloServer({
+    typeDefs,
+    resolvers,
+    plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+  });
+  await server.start();
+  server.applyMiddleware({ app });
 
-// Rotas
-app.use("/", rotaSample);
-
-export default app;
-
-// Server
-if (process.env.JEST_WORKER_ID === undefined) {
-   app.listen(PORT, () => console.log(`#Running on port => ${PORT}!`));
+  await new Promise<void>((resolve) =>
+    httpServer.listen({ port: 4000 }, resolve)
+  );
+  console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`);
 }
+
+startApolloServer(typeDefs, resolvers);
